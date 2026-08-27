@@ -1,0 +1,61 @@
+Customer Churn Prediction — Model Report
+==================================================
+
+Accuracy           : 0.7395
+F1 Score (Churn)   : 0.7120
+ROC-AUC            : 0.8452
+Average Precision  : 0.7773
+
+Classification Report
+--------------------------------------------------
+              precision    recall  f1-score   support
+
+        Stay       0.86      0.69      0.76      1215
+       Churn       0.63      0.82      0.71       785
+
+    accuracy                           0.74      2000
+   macro avg       0.74      0.75      0.74      2000
+weighted avg       0.77      0.74      0.74      2000
+
+
+Best Hyperparameters
+--------------------------------------------------
+  base_score: None
+  booster: None
+  colsample_bylevel: None
+  colsample_bynode: None
+  colsample_bytree: 0.6
+  device: None
+  early_stopping_rounds: None
+  enable_categorical: False
+  eval_metric: logloss
+  feature_types: None
+  gamma: 0.1
+  grow_policy: None
+  importance_type: None
+  interaction_constraints: None
+  learning_rate: 0.05
+  max_bin: None
+  max_cat_threshold: None
+  max_cat_to_onehot: None
+  max_delta_step: None
+  max_depth: 3
+  max_leaves: None
+  min_child_weight: 3
+  missing: nan
+  monotone_constraints: None
+  multi_strategy: None
+  n_estimators: 200
+  n_jobs: None
+  num_parallel_tree: None
+  objective: binary:logistic
+  random_state: 42
+  reg_alpha: 0.01
+  reg_lambda: 1.5
+  sampling_method: None
+  scale_pos_weight: 1.9326861871419478
+  subsample: 0.9
+  tree_method: hist
+  use_label_encoder: False
+  validate_parameters: None
+  verbosity: 0
