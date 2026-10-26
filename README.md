@@ -21,8 +21,14 @@ An end-to-end **Machine Learning pipeline** for predicting customer churn in a T
 ```
 churn_prediction/
 ├── churn_pipeline.py       # Full end-to-end ML pipeline (single script)
+├── export_model.py         # Trains and serializes XGBoost bundle to joblib
+├── predictor.py            # ChurnPredictor inference & retention advice engine
+├── schemas.py              # Pydantic validation & API schemas
+├── app.py                  # Production FastAPI REST application
+├── test_api.py             # Automated unit & integration tests
 ├── requirements.txt        # Python dependencies
 └── outputs/                # Auto-generated on run
+    ├── churn_model.joblib  # Serialized model & preprocessing artifact
     ├── eda_distributions.png
     ├── correlation_heatmap.png
     ├── confusion_matrix.png
@@ -31,6 +37,84 @@ churn_prediction/
     ├── feature_importance.png
     ├── shap_summary.png
     └── model_report.txt
+```
+
+---
+
+## 🌐 FastAPI REST Service
+
+The project includes a production REST API for real-time customer churn scoring, batch prediction, and retention recommendations.
+
+### Start the API Server
+
+```bash
+# Activate virtual environment
+source venv/bin/activate
+
+# Launch Uvicorn dev server
+uvicorn app:app --reload --port 8000
+```
+
+Once running, explore the interactive Swagger documentation at:
+**[http://localhost:8000/docs](http://localhost:8000/docs)**
+
+### API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| `GET` | `/` | API status and overview |
+| `GET` | `/health` | Service health & model readiness check |
+| `GET` | `/model/info` | Model metadata, training metrics, top features |
+| `POST` | `/predict` | Real-time churn scoring for a single customer |
+| `POST` | `/predict/batch` | Bulk scoring for multiple customers |
+| `POST` | `/predict/csv` | Upload a CSV file and score all rows |
+
+### Sample Single Prediction Request
+
+```bash
+curl -X POST http://localhost:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{
+    "customer_id": "CUST-1049",
+    "gender": "Female",
+    "senior_citizen": 0,
+    "has_partner": 0,
+    "has_dependents": 0,
+    "tenure": 2,
+    "contract_type": "Month-to-month",
+    "payment_method": "Electronic check",
+    "internet_service": "Fiber optic",
+    "online_security": "No",
+    "tech_support": "No",
+    "monthly_charges": 89.50,
+    "num_support_tickets": 4
+  }'
+```
+
+### Sample Response
+
+```json
+{
+  "customer_id": "CUST-1049",
+  "churn_probability": 0.8412,
+  "churn_prediction": true,
+  "risk_tier": "High Risk",
+  "key_risk_factors": [
+    "Month-to-month contract (high churn vulnerability)",
+    "Early customer lifecycle (2 months tenure)",
+    "Frequent support tickets (4 tickets filed)",
+    "Payment method: Electronic check (higher friction/delinquency rate)",
+    "High monthly spend ($89.50/mo)",
+    "High charges without bundled protection/support"
+  ],
+  "recommended_retention_actions": [
+    "Offer 15% discount incentive to upgrade to a 1-year or 2-year contract.",
+    "Trigger VIP onboarding outreach and customer success check-in.",
+    "Priority ticket escalation: Assign dedicated Tier-2 specialist to resolve open issues.",
+    "Promote $5/mo bill credit for enabling automated card or bank payments.",
+    "Offer complimentary 6-month trial of Tech Support and Online Security."
+  ]
+}
 ```
 
 ---
